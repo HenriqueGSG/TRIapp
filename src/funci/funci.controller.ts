@@ -40,9 +40,26 @@ export class FunciController {
     ): Promise<Funci> {
 
         try {
-            // Parse do valor para garantir que seja uma string de data válida
 
             return await this.funciService.addDay(matricula, newDay);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new NotFoundException(error.message);
+            }
+            throw error;
+        }
+    }
+    @Patch(':matricula/remove-day/:dayToRemove')
+    async removeDay(
+        @Param('matricula')
+        matricula: string,
+        @Param('dayToRemove')
+        dayToRemove: string
+    ): Promise<Funci> {
+
+        try {
+            console.log(dayToRemove)
+            return await this.funciService.removeDay(matricula, dayToRemove);
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw new NotFoundException(error.message);

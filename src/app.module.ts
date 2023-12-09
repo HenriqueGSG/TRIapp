@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { FunciModule } from './funci/funci.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 
     }),
     MongooseModule.forRoot(process.env.DB_URI),
-    FunciModule],
+    FunciModule,
+    CalendarModule],
   controllers: [AppController],
   providers: [AppService],
 })

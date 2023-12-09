@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose'
 import { Funci } from './schemas/funci.schema';
 import * as  mongoose from 'mongoose';
+import { generateCalendar } from 'src/utils/utils';
 @Injectable()
 export class FunciService {
 
@@ -15,7 +16,9 @@ export class FunciService {
 
     async findAll(): Promise<Funci[]> {
         const funcis = await this.funciModel.find()
-
+        // Example usage
+        const result = generateCalendar(11, 2023);
+        console.log(result);
         return funcis
     }
 
@@ -70,7 +73,7 @@ export class FunciService {
         const oldDayArray = funci.dias_em_casa
         const newDayArray = funci.dias_em_casa.filter((value) => value !== dayToRemove)
 
-        if (oldDayArray === newDayArray) {
+        if (oldDayArray.length === newDayArray.length) {
             throw new NotFoundException('Day not found.')
         }
 

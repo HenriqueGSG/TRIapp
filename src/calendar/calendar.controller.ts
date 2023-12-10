@@ -52,7 +52,7 @@ export class CalendarController {
   }
   @Post('remove/:funciId/:month/:day')
   // @UsePipes(new MonthValidationPipe())
-  async removeFunciFromDay(
+  async unregisterFunciFromDay(
     @Param('funciId')
     funciId: string,
     @Param('month')
@@ -60,6 +60,6 @@ export class CalendarController {
     @Param('day')
     day: string
   ): Promise<Calendar> {
-    return this.calenderService.removeFunciFromDay(funciId, day, Number(month));
+    return this.calenderService.unregisterFunciFromDay(funciId, day, Number(month));
   }
 }

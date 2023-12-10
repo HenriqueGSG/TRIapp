@@ -58,7 +58,7 @@ export class CalendarService {
         return daySelected;
     }
 
-    async removeFunciFromDay(funciId: string, day: string, month: number): Promise<Calendar> {
+    async unregisterFunciFromDay(funciId: string, day: string, month: number): Promise<Calendar> {
         console.log(funciId, month, day); // Remove info
         const daySelected = await this.findDayByMonthAndDay(month, day);
         const selectedDayObject = removeDayValidation(daySelected, day, funciId);

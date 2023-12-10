@@ -1,18 +1,16 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Calendar {
+  @Prop()
+  monthIntRef: number;
 
-    @Prop()
-    monthIntRef: number
+  @Prop()
+  month: string;
 
-    @Prop()
-    month: string;
-
-    @Prop()
-    days: { day: string; listFunci: string[], weekday: string }[];
-
+  @Prop()
+  days: { day: string; listFunci: string[]; weekday: string }[];
 }
 
 export const CalendarSchema = SchemaFactory.createForClass(Calendar);

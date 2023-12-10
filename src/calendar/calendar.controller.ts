@@ -5,7 +5,7 @@ import {
   Param,
   Patch,
   Post,
-  UsePipes,
+  UsePipes
 } from '@nestjs/common';
 import { CalendarService } from './calendar.service';
 import { Calendar } from './schemas/calendar.schema';
@@ -25,7 +25,7 @@ export class CalendarController {
   @UsePipes(new MonthValidationPipe())
   async getMonth(
     @Param('month')
-    monthIntRef: number,
+    monthIntRef: number
   ): Promise<Calendar> {
     return this.calenderService.findOne(monthIntRef);
   }
@@ -34,7 +34,7 @@ export class CalendarController {
   @UsePipes(new MonthValidationPipe())
   async createCalendar(
     @Param('month')
-    month: number,
+    month: number
   ): Promise<Calendar> {
     return this.calenderService.createCalendar(month);
   }
@@ -46,7 +46,7 @@ export class CalendarController {
     @Param('month')
     month: string,
     @Param('day')
-    day: string,
+    day: string
   ): Promise<Calendar> {
     return this.calenderService.registerFunciToDay(funciId, day, Number(month));
   }
@@ -58,7 +58,7 @@ export class CalendarController {
     @Param('month')
     month: string,
     @Param('day')
-    day: string,
+    day: string
   ): Promise<Calendar> {
     return this.calenderService.removeFunciFromDay(funciId, day, Number(month));
   }

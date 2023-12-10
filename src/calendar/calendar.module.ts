@@ -5,8 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CalendarSchema } from './schemas/calendar.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Calendar', schema: CalendarSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: 'Calendar', schema: CalendarSchema }])
+  ],
   controllers: [CalendarController],
   providers: [CalendarService]
 })
-export class CalendarModule { }
+export class CalendarModule {}

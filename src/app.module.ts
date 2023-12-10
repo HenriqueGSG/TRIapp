@@ -11,12 +11,12 @@ import { CalendarModule } from './calendar/calendar.module';
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true
-
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     FunciModule,
-    CalendarModule],
+    CalendarModule
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
-export class AppModule { }
+export class AppModule {}

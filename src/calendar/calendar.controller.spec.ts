@@ -6,7 +6,7 @@ describe('CalendarController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [CalendarController],
+      controllers: [CalendarController]
     }).compile();
 
     controller = module.get<CalendarController>(CalendarController);
@@ -14,7 +14,11 @@ describe('CalendarController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+
+
+    console.log('a')
+
+
+
   });
 });
-
-

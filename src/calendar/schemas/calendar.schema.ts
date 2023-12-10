@@ -10,8 +10,8 @@ export class Calendar {
     @Prop()
     month: string;
 
-    @Prop({ type: [{ day: String, listFunci: [Object] }] })
-    days: { day: string; listFunci: any[] }[];
+    @Prop()
+    days: { day: string; listFunci: string[], weekday: string }[];
 
 }
 

@@ -1,9 +1,8 @@
 interface CalendarData {
     monthIntRef: number;
     month: string;
-    days: { day: string; listFunci: any[] }[];
+    days: { day: string; listFunci: any[]; weekday: string }[];
 }
-
 export function generateCalendar(month: number, year: number): CalendarData {
     const calendar: CalendarData = {
         monthIntRef: month,
@@ -15,6 +14,11 @@ export function generateCalendar(month: number, year: number): CalendarData {
     const monthNames = [
         'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
         'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+    ];
+
+    // Array de nomes dos dias da semana em português
+    const dayOfWeekNames = [
+        'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'
     ];
 
     // Cria um objeto de data para o primeiro dia do mês
@@ -31,17 +35,22 @@ export function generateCalendar(month: number, year: number): CalendarData {
         // Cria um novo objeto de data para o dia atual
         const currentDate = new Date(year, month - 1, day);
 
-        // Verifica se o dia da semana não é sábado (6) nem domingo (0)
-        if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
-            // Formata a data como "YYYY-MM-DD"
-            const formattedDate = currentDate.toISOString().split('T')[0];
-
-            // Inicializa o array para o dia atual
-            const dayDetails = { day: formattedDate, listFunci: [] };
-
-            // Adiciona os detalhes do dia ao calendário
-            calendar.days.push(dayDetails);
+        // Verifica se o dia é sábado (6) ou domingo (0)
+        if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+            continue; // Ignora fins de semana
         }
+
+        // Formata a data como "YYYY-MM-DD"
+        const formattedDate = currentDate.toISOString().split('T')[0];
+
+        // Obtém o nome do dia da semana
+        const weekday = dayOfWeekNames[currentDate.getDay()];
+
+        // Inicializa o array para o dia atual
+        const dayDetails = { day: formattedDate, listFunci: [], weekday: weekday };
+
+        // Adiciona os detalhes do dia ao calendário
+        calendar.days.push(dayDetails);
     }
 
     return calendar;

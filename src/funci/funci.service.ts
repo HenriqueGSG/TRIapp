@@ -8,7 +8,7 @@ export class FunciService {
   constructor(
     @InjectModel(Funci.name)
     private funciModel: mongoose.Model<Funci>
-  ) {}
+  ) { }
 
   async findAll(): Promise<Funci[]> {
     const funcis = await this.funciModel.find();
@@ -37,9 +37,10 @@ export class FunciService {
     ];
     const funci = await this.funciModel.aggregate(pipeline).exec();
 
-    if (!funci) {
+    if (!funci[0]) {
       throw new NotFoundException('Funci not found.');
     }
+    console.log(funci[0])
     return funci[0];
   }
   async addDay(matricula: string, newDay: string): Promise<Funci> {

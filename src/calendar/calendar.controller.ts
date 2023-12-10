@@ -30,7 +30,7 @@ export class CalendarController {
     return this.calenderService.findOne(monthIntRef);
   }
 
-  @Post(':month')
+  @Post('create/:month')
   @UsePipes(new MonthValidationPipe())
   async createCalendar(
     @Param('month')

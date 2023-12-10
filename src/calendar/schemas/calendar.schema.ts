@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Calendar {
+
   @Prop()
   monthIntRef: number;
 

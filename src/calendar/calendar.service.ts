@@ -48,6 +48,8 @@ export class CalendarService {
 
     async registerFunciToDay(funciId: string, day: string, month: number): Promise<Calendar> {
         console.log(funciId, month, day); // Register info
+        await this.addDayToFunci(funciId, day);
+
 
         const daySelected = await this.findDayByMonthAndDay(month, day);
         const selectedDayObject = registerDayValidation(daySelected, day, funciId);
@@ -57,13 +59,15 @@ export class CalendarService {
         daySelected.markModified('days');
         await daySelected.save();
 
-        await this.addDayToFunci(funciId, day);
+
 
         return daySelected;
     }
 
     async unregisterFunciFromDay(funciId: string, day: string, month: number): Promise<Calendar> {
         console.log(funciId, month, day); // Remove info
+        await this.removeDayFromFunci(funciId, day);
+
         const daySelected = await this.findDayByMonthAndDay(month, day);
         const selectedDayObject = removeDayValidation(daySelected, day, funciId);
 
@@ -71,9 +75,6 @@ export class CalendarService {
 
         daySelected.markModified('days');
         await daySelected.save();
-
-        await this.removeDayFromFunci(funciId, day);
-
         return daySelected;
     }
 
@@ -93,13 +94,14 @@ export class CalendarService {
 
     private async addDayToFunci(funciId: string, day: string): Promise<Funci> {
         const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
+        const homeDaysLimit = 2
 
         if (!funci) {
             throw new NotFoundException('Funci not found.');
         }
 
-        if (funci.homeDays.length >= 7) {
-            throw new BadRequestException('Funci already selected 7 days');
+        if (funci.homeDays.length >= homeDaysLimit) {
+            throw new BadRequestException(`Funci already selected ${homeDaysLimit} days`);
         }
         funci.homeDays.push(day);
         await funci.save();

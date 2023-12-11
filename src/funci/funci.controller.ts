@@ -33,40 +33,40 @@ export class FunciController {
     @Param('funciId')
     funciId: string
   ): Promise<Funci> {
-    return this.funciService.findByMatricula(funciId);
+    return this.funciService.findByFunciId(funciId);
   }
 
-  @Patch(':funciId/add-day/:newDay')
-  async addDay(
-    @Param('funciId')
-    funciId: string,
-    @Param('newDay')
-    newDay: string
-  ): Promise<Funci> {
-    try {
-      return await this.funciService.addDay(funciId, newDay);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-      throw error;
-    }
-  }
-  @Patch(':funciId/remove-day/:dayToRemove')
-  async removeDay(
-    @Param('funciId')
-    funciId: string,
-    @Param('dayToRemove')
-    dayToRemove: string
-  ): Promise<Funci> {
-    try {
-      console.log(dayToRemove);
-      return await this.funciService.removeDay(funciId, dayToRemove);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      }
-      throw error;
-    }
-  }
+  // @Patch(':funciId/add-day/:newDay')
+  // async addDay(
+  //   @Param('funciId')
+  //   funciId: string,
+  //   @Param('newDay')
+  //   newDay: string
+  // ): Promise<Funci> {
+  //   try {
+  //     return await this.funciService.addDay(funciId, newDay);
+  //   } catch (error) {
+  //     if (error instanceof NotFoundException) {
+  //       throw new NotFoundException(error.message);
+  //     }
+  //     throw error;
+  //   }
+  // }
+  // @Patch(':funciId/remove-day/:dayToRemove')
+  // async removeDay(
+  //   @Param('funciId')
+  //   funciId: string,
+  //   @Param('dayToRemove')
+  //   dayToRemove: string
+  // ): Promise<Funci> {
+  //   try {
+  //     console.log(dayToRemove);
+  //     return await this.funciService.removeDay(funciId, dayToRemove);
+  //   } catch (error) {
+  //     if (error instanceof NotFoundException) {
+  //       throw new NotFoundException(error.message);
+  //     }
+  //     throw error;
+  //   }
+  // }
 }

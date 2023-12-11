@@ -42,6 +42,10 @@ export class CalendarService {
         return calendarObj;
     }
 
+
+
+
+
     async registerFunciToDay(funciId: string, day: string, month: number): Promise<Calendar> {
         console.log(funciId, month, day); // Register info
 
@@ -94,10 +98,10 @@ export class CalendarService {
             throw new NotFoundException('Funci not found.');
         }
 
-        if (funci.dias_em_casa.length >= 7) {
+        if (funci.homeDays.length >= 7) {
             throw new BadRequestException('Funci already selected 7 days');
         }
-        funci.dias_em_casa.push(day);
+        funci.homeDays.push(day);
         await funci.save();
 
         return funci;
@@ -109,10 +113,10 @@ export class CalendarService {
             throw new NotFoundException('Funci not found.');
         }
 
-        if (!funci.dias_em_casa.includes(day)) {
+        if (!funci.homeDays.includes(day)) {
             throw new BadRequestException('Days is not in the list.');
         }
-        funci.dias_em_casa = funci.dias_em_casa.filter((item) => item !== day);
+        funci.homeDays = funci.homeDays.filter((item) => item !== day);
         await funci.save();
 
         return funci;

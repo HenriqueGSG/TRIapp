@@ -30,7 +30,7 @@ export class FunciService {
       {
         $addFields: {
           selectedDaysCount: {
-            $size: '$dias_em_casa'
+            $size: '$homeDays'
           }
         }
       }
@@ -50,7 +50,7 @@ export class FunciService {
     if (!funci) {
       throw new NotFoundException('Funci not found.');
     }
-    funci.dias_em_casa.push(newDay);
+    funci.homeDays.push(newDay);
     await funci.save();
 
     return funci;
@@ -63,8 +63,8 @@ export class FunciService {
       throw new NotFoundException('Funci not found.');
     }
 
-    const oldDayArray = funci.dias_em_casa;
-    const newDayArray = funci.dias_em_casa.filter(
+    const oldDayArray = funci.homeDays;
+    const newDayArray = funci.homeDays.filter(
       (value) => value !== dayToRemove
     );
 
@@ -72,7 +72,7 @@ export class FunciService {
       throw new NotFoundException('Day not found.');
     }
 
-    funci.dias_em_casa = newDayArray;
+    funci.homeDays = newDayArray;
     await funci.save();
 
     return funci;

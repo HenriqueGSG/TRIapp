@@ -11,7 +11,7 @@ export class Funci {
   nome: string;
 
   @Prop()
-  dias_em_casa: string[];
+  homeDays: string[];
 }
 
 export const FunciSchema = SchemaFactory.createForClass(Funci);

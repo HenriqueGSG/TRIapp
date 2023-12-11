@@ -11,10 +11,12 @@ import { CalendarService } from './calendar.service';
 import { Calendar } from './schemas/calendar.schema';
 import { generateCalendar } from 'src/utils/utils';
 import { MonthValidationPipe } from 'src/pipes/month-validation.pipe';
+import { CommonCalendarValidationPipe } from 'src/pipes/common.pipe';
 
 @Controller('calendar')
 export class CalendarController {
-  constructor(private calenderService: CalendarService) { }
+  constructor(private calenderService: CalendarService, private monthValidationPipe: MonthValidationPipe,
+    private commonCalendarValidationPipe: CommonCalendarValidationPipe) { }
 
   @Get()
   async getMonths(): Promise<Calendar[]> {
@@ -22,7 +24,7 @@ export class CalendarController {
   }
 
   @Get(':month')
-  @UsePipes(new MonthValidationPipe())
+  @UsePipes(MonthValidationPipe)
   async getMonth(
     @Param('month')
     monthIntRef: number
@@ -31,15 +33,17 @@ export class CalendarController {
   }
 
   @Post('create/:month')
-  @UsePipes(new MonthValidationPipe())
+  @UsePipes(MonthValidationPipe)
   async createCalendar(
     @Param('month')
     month: number
   ): Promise<Calendar> {
     return this.calenderService.createCalendar(month);
   }
+
+
   @Post('register/:funciId/:month/:day')
-  // @UsePipes(new MonthValidationPipe())
+  @UsePipes(CommonCalendarValidationPipe)
   async registerFunciToDay(
     @Param('funciId')
     funciId: string,
@@ -50,8 +54,10 @@ export class CalendarController {
   ): Promise<Calendar> {
     return this.calenderService.registerFunciToDay(funciId, day, Number(month));
   }
-  @Post('remove/:funciId/:month/:day')
-  // @UsePipes(new MonthValidationPipe())
+
+
+  @Post('unregister/:funciId/:month/:day')
+  @UsePipes(CommonCalendarValidationPipe)
   async unregisterFunciFromDay(
     @Param('funciId')
     funciId: string,

@@ -13,7 +13,7 @@ import { CreateFunciDto } from './dto/create-funci.dto';
 
 @Controller('funci')
 export class FunciController {
-  constructor(private funciService: FunciService) {}
+  constructor(private funciService: FunciService) { }
 
   @Get()
   async getAllFuncis(): Promise<Funci[]> {
@@ -28,23 +28,23 @@ export class FunciController {
     return this.funciService.create(funci);
   }
 
-  @Get(':matricula')
+  @Get(':funciId')
   async getFunci(
-    @Param('matricula')
-    matricula: string
+    @Param('funciId')
+    funciId: string
   ): Promise<Funci> {
-    return this.funciService.findByMatricula(matricula);
+    return this.funciService.findByMatricula(funciId);
   }
 
-  @Patch(':matricula/add-day/:newDay')
+  @Patch(':funciId/add-day/:newDay')
   async addDay(
-    @Param('matricula')
-    matricula: string,
+    @Param('funciId')
+    funciId: string,
     @Param('newDay')
     newDay: string
   ): Promise<Funci> {
     try {
-      return await this.funciService.addDay(matricula, newDay);
+      return await this.funciService.addDay(funciId, newDay);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -52,16 +52,16 @@ export class FunciController {
       throw error;
     }
   }
-  @Patch(':matricula/remove-day/:dayToRemove')
+  @Patch(':funciId/remove-day/:dayToRemove')
   async removeDay(
-    @Param('matricula')
-    matricula: string,
+    @Param('funciId')
+    funciId: string,
     @Param('dayToRemove')
     dayToRemove: string
   ): Promise<Funci> {
     try {
       console.log(dayToRemove);
-      return await this.funciService.removeDay(matricula, dayToRemove);
+      return await this.funciService.removeDay(funciId, dayToRemove);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

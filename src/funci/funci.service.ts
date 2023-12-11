@@ -22,10 +22,10 @@ export class FunciService {
     const res = await this.funciModel.create(funci);
     return res;
   }
-  async findByMatricula(matricula: string): Promise<Funci> {
+  async findByMatricula(funciId: string): Promise<Funci> {
     const pipeline = [
       {
-        $match: { matricula }
+        $match: { funciId }
       },
       {
         $addFields: {
@@ -43,9 +43,9 @@ export class FunciService {
     console.log(funci[0])
     return funci[0];
   }
-  async addDay(matricula: string, newDay: string): Promise<Funci> {
+  async addDay(funciId: string, newDay: string): Promise<Funci> {
     console.log('here', newDay);
-    const funci = await this.funciModel.findOne({ matricula }).exec();
+    const funci = await this.funciModel.findOne({ funciId }).exec();
 
     if (!funci) {
       throw new NotFoundException('Funci not found.');
@@ -55,10 +55,10 @@ export class FunciService {
 
     return funci;
   }
-  async removeDay(matricula: string, dayToRemove: string): Promise<Funci> {
+  async removeDay(funciId: string, dayToRemove: string): Promise<Funci> {
     console.log('here', dayToRemove);
 
-    const funci = await this.funciModel.findOne({ matricula }).exec();
+    const funci = await this.funciModel.findOne({ funciId }).exec();
     if (!funci) {
       throw new NotFoundException('Funci not found.');
     }

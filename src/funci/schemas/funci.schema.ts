@@ -5,7 +5,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 })
 export class Funci {
   @Prop()
-  matricula: string;
+  funciId: string;
 
   @Prop()
   nome: string;

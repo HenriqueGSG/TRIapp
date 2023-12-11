@@ -1,5 +1,5 @@
 export class CreateFunciDto {
-  readonly matricula: string;
+  readonly funciId: string;
   readonly nome: string;
   readonly homeDays: string[];
 }

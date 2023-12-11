@@ -92,7 +92,7 @@ export class CalendarService {
     }
 
     private async addDayToFunci(funciId: string, day: string): Promise<Funci> {
-        const funci = await this.funciModel.findOne({ matricula: funciId }).exec();
+        const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
 
         if (!funci) {
             throw new NotFoundException('Funci not found.');
@@ -107,7 +107,7 @@ export class CalendarService {
         return funci;
     }
     private async removeDayFromFunci(funciId: string, day: string): Promise<Funci> {
-        const funci = await this.funciModel.findOne({ matricula: funciId }).exec();
+        const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
 
         if (!funci) {
             throw new NotFoundException('Funci not found.');

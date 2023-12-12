@@ -4,7 +4,7 @@ import { Calendar } from 'src/calendar/schemas/calendar.schema';
 
 
 export function registerDayValidation(daySelected: Calendar, day: string, funciId: string) {
-  const dayLimit = 3
+  // const dayLimit = 3
 
   if (!daySelected) {
     throw new NotFoundException('Day not found.');
@@ -17,9 +17,9 @@ export function registerDayValidation(daySelected: Calendar, day: string, funciI
     throw new NotFoundException('Day not found in array.');
   }
 
-  if (selectedDayObject.listFunci.length >= dayLimit) {
-    throw new BadRequestException(`Exceeded maximum limit of listFunci. (${dayLimit})`);
-  }
+  // if (selectedDayObject.listFunci.length >= dayLimit) {
+  //   throw new BadRequestException(`Exceeded maximum limit of listFunci. (${dayLimit})`);
+  // }
   if (selectedDayObject.listFunci.includes(funciId)) {
     throw new BadRequestException('funciId already exists in listFunci.');
   }

@@ -6,7 +6,9 @@ import { generateCalendar } from 'src/utils/utils';
 import { registerDayValidation, removeDayValidation } from 'src/utils/validators';
 import { Funci } from 'src/funci/schemas/funci.schema';
 
-interface CalendarDocument extends Calendar, Document { }
+interface CalendarDocument extends Calendar, Document {
+    listFunci: any;
+}
 
 @Injectable()
 export class CalendarService {
@@ -47,13 +49,23 @@ export class CalendarService {
 
 
     async registerFunciToDay(funciId: string, day: string, month: number): Promise<Calendar> {
+
+
         console.log(funciId, month, day); // Register info
-        await this.addDayToFunci(funciId, day);
-
-
+        const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
         const daySelected = await this.findDayByMonthAndDay(month, day);
         const selectedDayObject = registerDayValidation(daySelected, day, funciId);
 
+        if (!funci) {
+            throw new NotFoundException('Funci not found.');
+        }
+
+        if (funci.homeDays.length >= 3 || selectedDayObject.listFunci.length >= 5) {
+            throw new BadRequestException('Exceeded limit for either homeDays or listFunci.');
+        }
+
+
+        await this.addDayToFunci(funciId, day);
         selectedDayObject.listFunci.push(funciId);
 
         daySelected.markModified('days');
@@ -85,24 +97,18 @@ export class CalendarService {
                 'days.day': day
             })
             .exec();
-        if (!daySelected) {
-            throw new NotFoundException('Day not found.');
-        }
-
         return daySelected;
     }
 
     private async addDayToFunci(funciId: string, day: string): Promise<Funci> {
         const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
-        const homeDaysLimit = 2
+
 
         if (!funci) {
             throw new NotFoundException('Funci not found.');
         }
 
-        if (funci.homeDays.length >= homeDaysLimit) {
-            throw new BadRequestException(`Funci already selected ${homeDaysLimit} days`);
-        }
+
         funci.homeDays.push(day);
         await funci.save();
 

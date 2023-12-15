@@ -10,4 +10,4 @@ import { Funci, FunciSchema } from './schemas/funci.schema';
   controllers: [FunciController],
   providers: [FunciService]
 })
-export class FunciModule {}
+export class FunciModule { }

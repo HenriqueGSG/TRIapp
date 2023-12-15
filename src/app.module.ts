@@ -5,6 +5,8 @@ import { FunciModule } from './funci/funci.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CalendarModule } from './calendar/calendar.module';
+import { DatabaseModule } from './database/database.module';
+import { CatsModule } from './cats/cats.module';
 
 @Module({
   imports: [
@@ -14,9 +16,10 @@ import { CalendarModule } from './calendar/calendar.module';
     }),
     MongooseModule.forRoot(process.env.DB_URI),
     FunciModule,
-    CalendarModule
+    CalendarModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService]
 })
-export class AppModule {}
+export class AppModule { }

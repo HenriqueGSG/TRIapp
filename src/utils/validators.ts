@@ -2,6 +2,29 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Calendar } from 'src/calendar/schemas/calendar.schema';
 
 
+export function registerListDayValidation(daySelected: Calendar, day: string, funciId: string) {
+  const dayLimit = 5
+
+  if (!daySelected) {
+    return null;
+  }
+
+  const selectedDayObject = daySelected.days.find(
+    (dayObj) => dayObj.day === day
+  );
+  if (!selectedDayObject) {
+    return null;
+  }
+
+  if (selectedDayObject.listFunci.length >= dayLimit) {
+    return null
+  }
+  if (selectedDayObject.listFunci.includes(funciId)) {
+    return null;
+  }
+  return selectedDayObject;
+}
+
 
 export function registerDayValidation(daySelected: Calendar, day: string, funciId: string) {
   // const dayLimit = 3
@@ -46,6 +69,27 @@ export function removeDayValidation(daySelected: Calendar, day: string, funciId:
     throw new NotFoundException('Funci is not registered on this day.');
   }
 
+  return selectedDayObject;
+}
+
+
+export function unregisterListDayValidation(daySelected: Calendar, day: string, funciId: string) {
+  const dayLimit = 5
+
+  if (!daySelected) {
+    return null;
+  }
+
+  const selectedDayObject = daySelected.days.find(
+    (dayObj) => dayObj.day === day
+  );
+  if (!selectedDayObject) {
+    return null;
+  }
+
+  if (!selectedDayObject.listFunci.includes(funciId)) {
+    return null;
+  }
   return selectedDayObject;
 }
 

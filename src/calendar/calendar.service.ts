@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Calendar } from './schemas/calendar.schema';
 import { Model, Document } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { generateCalendar } from 'src/utils/utils';
-import { registerDayValidation, removeDayValidation } from 'src/utils/validators';
+import { registerDayValidation, registerListDayValidation, removeDayValidation, unregisterListDayValidation } from 'src/utils/validators';
 import { Funci } from 'src/funci/schemas/funci.schema';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 interface CalendarDocument extends Calendar, Document {
     listFunci: any;
@@ -44,13 +45,55 @@ export class CalendarService {
         return calendarObj;
     }
 
+    async registerFunciToListDay(funciId: string, listDays: string[], month: number): Promise<any> {
+        const maxFunciDays = 5;
+        const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
+        const successArray = [];
+        const errorArray = [];
+        for (const day of listDays) {
+            const daySelected = await this.findDayByMonthAndDay(month, day);
+            const selectedDayObject = registerListDayValidation(daySelected, day, funciId);
+            if (funci.homeDays.length >= maxFunciDays) {
+                console.log('FUNCIONARIO NAO TEM MAIS DIAS -> ', day);
+                errorArray.push(day);
+                continue;
+            }
+            if (funci.homeDays.includes(day)) {
+                console.log('FUNCIONARIO JA ESTA INSCRITO -> ', day);
+                errorArray.push(day);
+                continue;
+            }
+            if (!selectedDayObject) {
+                console.log('NÃO PASSOU NA VALIDACAO DE CALENDARIO -> ', day);
 
-
-
-
+                errorArray.push(day);
+                continue;
+            }
+            await this.calendarModel.updateOne(
+                {
+                    monthIntRef: month,
+                    'days.day': day
+                },
+                {
+                    $addToSet: { 'days.$.listFunci': funciId }
+                }
+            );
+            await this.addDayToFunci(funciId, day);
+            successArray.push(day);
+        }
+        if (errorArray.length === listDays.length) {
+            throw new BadRequestException('Nenhum dia foi adicionado');
+        }
+        if (errorArray.length > 0 && errorArray.length != listDays.length) {
+            return {
+                status: 206,
+                errorArray: errorArray,
+                successArray: successArray
+            };
+        }
+        return { status: 201, errorArray: errorArray, successArray: successArray };
+    }
     async registerFunciToDay(funciId: string, day: string, month: number): Promise<Calendar> {
-
-
         console.log(funciId, month, day); // Register info
         const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
         const daySelected = await this.findDayByMonthAndDay(month, day);
@@ -64,17 +107,57 @@ export class CalendarService {
             throw new BadRequestException('Exceeded limit for either homeDays or listFunci.');
         }
 
-
         await this.addDayToFunci(funciId, day);
         selectedDayObject.listFunci.push(funciId);
 
         daySelected.markModified('days');
         await daySelected.save();
 
-
-
         return daySelected;
     }
+
+    async unregisterFunciToListDay(funciId: string, listDays: string[], month: number): Promise<any> {
+        const maxFunciDays = 5;
+        const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
+        const successArray = [];
+        const errorArray = [];
+        for (const day of listDays) {
+            const daySelected = await this.findDayByMonthAndDay(month, day);
+            const selectedDayObject = unregisterListDayValidation(daySelected, day, funciId);
+
+
+            if (!selectedDayObject) {
+                console.log('NÃO PASSOU NA VALIDACAO DE CALENDARIO -> ', day);
+
+                errorArray.push(day);
+                continue;
+            }
+            await this.calendarModel.updateOne(
+                {
+                    monthIntRef: month,
+                    'days.day': day
+                },
+                {
+                    $pull: { 'days.$.listFunci': funciId }
+                }
+            );
+            await this.removeDayFromFunci(funciId, day);
+            successArray.push(day);
+        }
+        if (errorArray.length === listDays.length) {
+            throw new BadRequestException('Nenhum dia foi removido');
+        }
+        if (errorArray.length > 0 && errorArray.length != listDays.length) {
+            return {
+                status: 206,
+                errorArray: errorArray,
+                successArray: successArray
+            };
+        }
+        return { status: 200, errorArray: errorArray, successArray: successArray };
+    }
+
+
 
     async unregisterFunciFromDay(funciId: string, day: string, month: number): Promise<Calendar> {
         console.log(funciId, month, day); // Remove info
@@ -103,11 +186,9 @@ export class CalendarService {
     private async addDayToFunci(funciId: string, day: string): Promise<Funci> {
         const funci = await this.funciModel.findOne({ funciId: funciId }).exec();
 
-
         if (!funci) {
             throw new NotFoundException('Funci not found.');
         }
-
 
         funci.homeDays.push(day);
         await funci.save();
